@@ -12,16 +12,24 @@ import java.util.List;
 public class OwnerDetailsPage {
 
 	private WebDriver driver;
+
 	private WebDriverWait wait;
+
 	private String baseUrl;
+
 	private int ownerId;
 
 	// Локаторы
 	private By ownerTable = By.cssSelector("table.table-striped:first-of-type");
+
 	private By ownerTableRows = By.cssSelector("table.table-striped:first-of-type tbody tr");
+
 	private By petsSection = By.xpath("//h2[text()='Pets and Visits']/following-sibling::table");
+
 	private By petRows = By.xpath("//h2[text()='Pets and Visits']/following-sibling::table/tbody/tr");
+
 	private By editOwnerButton = By.cssSelector("a.btn.btn-primary[href$='/edit']");
+
 	private By addPetButton = By.cssSelector("a.btn.btn-primary[href$='/pets/new']");
 
 	// Конструктор
@@ -37,10 +45,10 @@ public class OwnerDetailsPage {
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 	}
 
-//	// Открыть страницу владельца
-//	public void open() {
-//		driver.get(baseUrl + "/owners/" + ownerId);
-//	}
+	// // Открыть страницу владельца
+	// public void open() {
+	// driver.get(baseUrl + "/owners/" + ownerId);
+	// }
 
 	// Получить данные владельца по заголовку (Name, Address, City, Telephone)
 	public String getOwnerData(String fieldName) {
@@ -68,7 +76,8 @@ public class OwnerDetailsPage {
 
 	// Проверка наличия питомца по имени
 	public boolean isPetPresent(String petName) {
-		List<WebElement> pets = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath("//h2[text()='Pets and Visits']/following-sibling::table//dd")));
+		List<WebElement> pets = wait.until(ExpectedConditions
+			.visibilityOfAllElementsLocatedBy(By.xpath("//h2[text()='Pets and Visits']/following-sibling::table//dd")));
 		for (WebElement pet : pets) {
 			if (pet.getText().equalsIgnoreCase(petName)) {
 				return true;
@@ -77,5 +86,7 @@ public class OwnerDetailsPage {
 		return false;
 	}
 
-	// Дополнительно можно добавить методы для перехода к редактированию питомца и добавления визита
+	// Дополнительно можно добавить методы для перехода к редактированию питомца и
+	// добавления визита
+
 }

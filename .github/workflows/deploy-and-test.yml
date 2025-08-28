@@ -1,0 +1,53 @@
+name: Deploy PetClinic and Run Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [17]
+
+    steps:
+      # 1️⃣ Проверяем репо
+      - uses: actions/checkout@v4
+
+      # 2️⃣ Ставим JDK
+      - name: Set up JDK ${{matrix.java}}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{matrix.java}}
+          distribution: 'adopt'
+          cache: maven
+
+      # 3️⃣ Создаем Kubernetes Kind кластер
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1
+
+      # 4️⃣ Деплой приложения
+      - name: Deploy PetClinic to k8s
+        run: |
+          kubectl apply -f k8s/
+
+      # 5️⃣ Ждем, пока Pod’ы будут готовы
+      - name: Wait for Pods
+        run: |
+          kubectl wait --for=condition=ready pod -l app=demo-db --timeout=180s
+          kubectl wait --for=condition=ready pod -l app=petclinic --timeout=180s
+
+      # 6️⃣ Узнаем IP сервиса
+      - name: Get PetClinic Service IP
+        id: svc
+        run: |
+          echo "PETCLINIC_IP=$(kubectl get svc petclinic -o jsonpath='{.spec.clusterIP}')" >> $GITHUB_ENV
+
+      # 7️⃣ Собираем проект и запускаем тесты
+      - name: Build and Run API & GUI Tests
+        run: |
+          ./mvnw clean verify
+          ./mvnw test -DbaseUrl=http://$PETCLINIC_IP:8080

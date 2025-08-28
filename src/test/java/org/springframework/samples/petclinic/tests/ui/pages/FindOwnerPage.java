@@ -11,12 +11,16 @@ import java.time.Duration;
 public class FindOwnerPage {
 
 	private WebDriver driver;
+
 	private WebDriverWait wait;
+
 	private String baseUrl;
 
 	// Локаторы
 	private By lastNameInput = By.id("lastName");
+
 	private By findOwnerButton = By.cssSelector("button[type='submit']");
+
 	private By resultsTable = By.cssSelector("table");
 
 	// Конструктор с baseUrl
@@ -44,8 +48,9 @@ public class FindOwnerPage {
 	}
 
 	public boolean isOwnerInResults(String ownerName) {
-//		WebElement table = driver.findElement(resultsTable);
+		// WebElement table = driver.findElement(resultsTable);
 		WebElement table = wait.until(ExpectedConditions.visibilityOfElementLocated(resultsTable));
 		return table.getText().contains(ownerName);
 	}
+
 }

@@ -9,14 +9,20 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class AddPetPage {
+
 	private WebDriver driver;
+
 	private WebDriverWait wait;
 
 	// Локаторы
 	private By ownerName = By.cssSelector(".form-group span"); // "George Franklin"
+
 	private By petNameInput = By.id("name");
+
 	private By birthDateInput = By.id("birthDate");
+
 	private By typeDropdown = By.id("type");
+
 	private By addPetButton = By.cssSelector("button[type='submit']");
 
 	public AddPetPage(WebDriver driver) {
@@ -54,4 +60,5 @@ public class AddPetPage {
 	public void clickAddPet() {
 		wait.until(ExpectedConditions.elementToBeClickable(addPetButton)).click();
 	}
+
 }

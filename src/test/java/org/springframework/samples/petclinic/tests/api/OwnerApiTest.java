@@ -14,38 +14,35 @@ public class OwnerApiTest {
 	@BeforeClass
 	public void setup() {
 		// Базовый URL (замени на актуальный, если у тебя локально или в AWS)
-		RestAssured.baseURI = System.getProperty("base.url");
+		RestAssured.baseURI = System.getProperty("baseUrl");
 	}
 
 	@Test
 	public void createAndGetOwner() {
 		// 1. Создаём нового владельца
 		String newOwner = """
-            {
-              "firstName": "John",
-              "lastName": "Doe",
-              "address": "123 Main St",
-              "city": "Springfield",
-              "telephone": "1234567890"
-            }
-            """;
+				{
+				  "firstName": "John",
+				  "lastName": "Doe",
+				  "address": "123 Main St",
+				  "city": "Springfield",
+				  "telephone": "1234567890"
+				}
+				""";
 
-		Response postResponse =
-			given()
-				.contentType(ContentType.JSON)
-				.body(newOwner)
-				.when()
-				.post("/api/owners")
-				.then()
-				.statusCode(201) // успешное создание
-				.extract()
-				.response();
+		Response postResponse = given().contentType(ContentType.JSON)
+			.body(newOwner)
+			.when()
+			.post("/api/owners")
+			.then()
+			.statusCode(201) // успешное создание
+			.extract()
+			.response();
 
 		int ownerId = postResponse.jsonPath().getInt("id");
 
 		// 2. Получаем владельца по ID
-		given()
-			.when()
+		given().when()
 			.get("/api/owners/{id}", ownerId)
 			.then()
 			.statusCode(200)
@@ -53,4 +50,5 @@ public class OwnerApiTest {
 			.body("lastName", equalTo("Doe"))
 			.body("city", equalTo("Springfield"));
 	}
+
 }

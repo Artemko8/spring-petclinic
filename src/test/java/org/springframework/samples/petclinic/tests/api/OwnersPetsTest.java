@@ -13,16 +13,17 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 
+@Test
 public class OwnersPetsTest {
 
 	@BeforeClass
 	public void setup() {
 		// Базовый URL (замени на актуальный, если у тебя локально или в AWS)
-		RestAssured.baseURI = System.getProperty("base.url");
+		RestAssured.baseURI = System.getProperty("baseUrl");
 	}
 
 	@Test
-	public void doThingsOnOwnerAndPet() {
+	public void doThingsOnOwnerAndPetTest() {
 		Owner owner = new Owner();
 		owner.firstName = "Vasia";
 		owner.lastName = "Pupenko";
@@ -30,21 +31,20 @@ public class OwnersPetsTest {
 		owner.city = "Wilmington";
 		owner.telephone = "1234567890";
 
-		Response postResponse =
-			given()
-				.contentType(ContentType.JSON)
-				.body(owner)
-				.when()
-				.post("/api/owners")
-				.then()
-				.statusCode(201) // успешное создание
-				.extract()
-				.response();
+		Response postResponse = given().contentType(ContentType.JSON)
+			.body(owner)
+			.when()
+			.post("/api/owners")
+			.then()
+			.statusCode(201) // успешное создание
+			.extract()
+			.response();
 
 		int ownerId = postResponse.jsonPath().getInt("id");
 
 		PetApi petApi = new PetApi();
-		Pet pet = new Pet(null, "Whiskers", "2023-02-01", new PetType(1, "cat"), ownerId);
+		PetType cat = new PetType(1, "cat");
+		Pet pet = new Pet(null, "Whiskers", "2023-02-01", cat, ownerId);
 		Response postPetResponse = petApi.createPet(ownerId, pet);
 
 		int petId = postPetResponse.jsonPath().getInt("id");
@@ -71,5 +71,5 @@ public class OwnersPetsTest {
 		petGetResponse = petApi.getPet(petId);
 		Assert.assertEquals(petGetResponse.getStatusCode(), 404);
 	}
-}
 
+}

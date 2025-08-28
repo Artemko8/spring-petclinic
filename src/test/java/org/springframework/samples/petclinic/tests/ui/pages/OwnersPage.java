@@ -12,12 +12,16 @@ import java.util.List;
 public class OwnersPage {
 
 	private WebDriver driver;
+
 	private WebDriverWait wait;
+
 	private String baseUrl;
 
 	// Локаторы
 	private By ownersTable = By.id("owners");
+
 	private By ownerRows = By.cssSelector("#owners tbody tr");
+
 	private By ownerNameLink = By.cssSelector("td a"); // ссылка с именем владельца
 
 	// Конструктор с базовым URL
@@ -27,10 +31,10 @@ public class OwnersPage {
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 	}
 
-//	// Открыть страницу владельцев
-//	public void open() {
-//		driver.get(baseUrl + "/owners/find");
-//	}
+	// // Открыть страницу владельцев
+	// public void open() {
+	// driver.get(baseUrl + "/owners/find");
+	// }
 
 	// Получить список всех владельцев из таблицы
 	public List<WebElement> getAllOwnerRows() {
@@ -68,4 +72,5 @@ public class OwnersPage {
 		link.click();
 		return new OwnerDetailsPage(driver, baseUrl);
 	}
+
 }
